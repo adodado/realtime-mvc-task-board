@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+<h1>Logga in</h1>
+<form method="post" action="/Account/Login">
+    <table cellpadding="3">
+        <tr>
+            <td>Användarnamn :</td>
+            <td><input type="text" name="username" /></td>
+        </tr>
+        <tr>
+            <td>Lösenord :</td>
+            <td><input type="password" name="password" /></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" class="btn btn-success" value="Logga in"></td>
+        </tr>
+        <tr>
+            <td colspan="2">Skapa användare ? För att skapa användare @Html.ActionLink(" >> klicka här! << ", "Register", "User")</td>
+        </tr>
+    </table>
+</form>

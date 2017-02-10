@@ -1,0 +1,87 @@
+﻿@model RealtimeKanbanBoard.Models.HomeIndexModel
+
+@{
+    ViewBag.Title = "Startsida";
+}
+<link href="~/Content/board.css" rel="stylesheet" />
+
+<h2>Projekt</h2>
+
+<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="icon-plus"></i> Lägg till tavla</button>
+@*TODO!! Make edit button work, for the moment it is disabled.*@
+
+<div id="indexTable" style="-moz-background-clip: padding; -moz-border-radius: 5px; -webkit-background-clip: padding-box; -webkit-border-radius: 5px; background: url('/Content/images/bg2.png'); background-clip: padding-box; border: 9px solid #2A2A2A; border-radius: 25px; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F2F8FC', endColorstr='#E1EAEF', GradientType=0); margin-top: 22px; max-width: 600px; min-height: 30px; padding: 10px;">
+    <table class="table">
+        @foreach (var board in Model.Boards)
+        {
+            <tr><td style="border-top: 0px; max-width: 90px;">@Html.ActionLink(board.Name, "board", new {id = board.Id}, new {@class = "boardLink"})<button id="btnEditBoard" class="btn" data-key="@board.Id" disabled>Redigera</button><button id="btnRemoveBoard" data-key="@board.Id" class="btn btn-danger btnRemoveBoard">Radera</button><p><small>@board.Desc</small></p></td></tr>
+        }
+    </table>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 450px">
+    <div class="modal-dialog" style="width: 450px">
+        <div class="modal-content">
+            <div class="modal-header" style="background: white;">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel" style="color: black;">Lägg till kanban tavla!</h4>
+            </div>
+            <div class="modal-body" style="background: white; color: black;">
+                <div class="control-group">
+                    <label class="control-label" for="txtName">Rubrik</label>
+                    <div class="controls">
+                        <input id="txtName" name="txtName" type="text" class="input-large">
+                    </div>
+                </div>
+
+                <!-- Textarea -->
+                <div class="control-group">
+                    <label class="control-label" for="textDesc">Beskrivning</label>
+                    <div class="controls">
+                        <textarea id="textDesc" name="textDesc" style="width: 90%;">Beskrivning</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Avbryt</button>
+                <button type="button" id="btnAddBoard" class="btn btn-success" data-dismiss="modal">Skapa</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript" src="~/Scripts/jquery-1.9.1.js"></script>
+<script language="javascript">
+    $(function() {
+        boardInfo = [];
+
+        $("#btnAddBoard").click(function() {
+            var boardName = $('#txtName').val();
+            var boardDesc = $('#textDesc').val();
+            $.ajax({
+                url: '/api/BoardBoardApi/',
+                type: "POST",
+                data: JSON.stringify({ name: boardName, desc: boardDesc }), //ko.toJSON({BoardId:vm.boardId,name:listname}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function() {
+                    window.location.reload();
+                }
+            });
+        });
+
+        $(".btnRemoveBoard").click(function() {
+            var removeBoardId = $(this).data('key');
+            $.ajax({
+                url: '/api/BoardBoardApi/',
+                type: "DELETE",
+                data: JSON.stringify({ id: removeBoardId }), //ko.toJSON({BoardId:vm.boardId,name:listname}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function() {
+                    window.location.reload();
+                }
+            });
+        });
+    });
+</script>

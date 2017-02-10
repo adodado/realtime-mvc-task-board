@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+
+<h1>Skapa användare</h1>
+<form method="post" action="/Account/Register">
+    <table cellpadding="3">
+        <tr>
+            <td>Användarnamn :</td>
+            <td><input type="text" name="username" /></td>
+        </tr>
+        <tr>
+            <td>Lösenord :</td>
+            <td><input type="password" name="password" /></td>
+        </tr>
+        <tr>
+            <td>Display namn :</td>
+            <td><input type="text" name="displayname" /></td>
+        </tr>
+        <tr>
+            <td>Land :</td>
+            <td><input type="text" name="country" /></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="Skapa användare"></td>
+        </tr>
+    </table>
+</form>

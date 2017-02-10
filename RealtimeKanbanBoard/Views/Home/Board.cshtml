@@ -1,0 +1,172 @@
+﻿@{
+    ViewBag.Title = @Model.Board.Name + " kanban tavla";
+}
+<link href="~/Content/board.css" rel="stylesheet" />
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/dark-hive/jquery-ui.css" id="theme">
+
+<h2>Projekt: @Model.Board.Name</h2>
+<button class="btn btn-info" data-toggle="modal" data-target="#myCreateColumn"><i class="icon-plus"></i> Lägg till kolumn</button>
+<button class="btn btn-success" data-toggle="modal" data-target="#myCreateTask"><i class="icon-plus"></i> Lägg till uppgift</button>
+<div class="taskBorder" style="display: none">
+    <header class="columnHeads clearfix">
+        <span data-bind="foreach: lists">
+            <div data-bind="css: { 'column column@(Model.Board.Lists.Count)' : true}">
+                <p class="title">
+                    <div id="btnRemoveColumn" class="btnRemoveColumn"></div>
+                    <span data-bind="text: name" style="bottom: 29px; position: relative;"></span>
+                </p>
+            </div>
+        </span>
+    </header>
+
+    <div class="row clearfix sortParent" data-bind="foreach: lists">
+        <div class="column column@(Model.Board.Lists.Count) clearfix">
+            <ul class="connectedSortable" data-bind="sortable: tasks,attr:{'id':'drop_'+$index()}">
+                <div id="postitTasks">
+                    <div id="btnRemove" class="btnRemove" data-bind="attr:{'data-id': id}"></div>
+                    <address data-bind="attr:{'class':'postit card_'+$index()}">
+                        <strong data-bind="text: name"></strong>:<br />
+                        <small data-bind="text: desc"></small>
+                    </address>
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Dialogs -->
+<!-- Create Task Modal -->
+<div class="modal fade" id="myCreateTask" tabindex="-1" role="dialog" aria-labelledby="myCreateTaskLabel" aria-hidden="true" data-focus-on="input:first" style="width: 450px">
+    <div class="modal-dialog" style="width: 450px">
+        <div class="modal-content">
+            <div class="modal-header" style="background: white;">
+                <h4 class="modal-title" id="myCreateTaskLabel" style="color: black;">Lägg till uppgift!</h4>
+            </div>
+            <div class="modal-body" style="background: white; color: black;">
+                <div class="control-group">
+                    <label class="control-label" for="txtNameTask">Rubrik</label>
+                    <div class="controls">
+                        <input id="txtNameTask" name="txtNameTask" type="text" class="input-large">
+                    </div>
+                </div>
+                <!-- Textarea -->
+                <div class="control-group">
+                    <label class="control-label" for="textTaskDesc">Beskrivning</label>
+                    <div class="controls">
+                        <textarea id="textTaskDesc" name="textTaskDesc" style="width: 90%;">Beskrivning av uppgiften</textarea>
+                    </div>
+                </div>
+                <!-- File Button
+                    <div class="control-group">
+                        <label class="control-label" for="filebutton">Lägg till fil/filer</label>
+                        <div class="controls">
+                            <input id="filebutton" name="filebutton" class="input-file" type="file">
+                        </div>
+                    </div>-->
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Avbryt</button>
+                <button type="button" id="btnAddTask" class="btn btn-success" data-dismiss="modal">Skapa uppgift</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Create Column Modal -->
+<div class="modal fade" id="myCreateColumn" tabindex="-1" role="dialog" aria-labelledby="myCreateColumnLabel" aria-hidden="true" style="width: 450px">
+    <div class="modal-dialog" style="width: 450px">
+        <div class="modal-content">
+            <div class="modal-header" style="background: white;">
+                <h4 class="modal-title" id="myCreateColumnLabel" style="color: black;">Lägg till kolumn!</h4>
+            </div>
+            <div class="modal-body" style="background: white; color: black;">
+                <div class="control-group">
+                    <label class="control-label" for="txtColumnName">Rubrik</label>
+                    <div class="controls">
+                        <input id="txtColumnName" name="txtColumnName" type="text" class="input-large">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Avbryt</button>
+                <button type="button" id="btnAddList" class="btn btn-success" data-dismiss="modal">Skapa kolumn</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="extra"></div>
+<div id="message" data-bind="flash: lastAction"></div>
+<div id="error" data-bind="flash: lastError"></div>
+<br />
+@*<div id="ulbox">
+    <span>Drop your s*** here...</span>
+</div>
+<ul data-bind="template: { name: 'upload-template', foreach: uploads }"></ul>
+<script type="text/html" id="upload-template">
+    <li>
+        <span>Uploaded: <small data-bind="text: name"></small>.</span><span>
+            Size: <small data-bind="text: size"></small>kB
+        </span><span>
+            Server path: <a data-bind="attr:{href: path}, text:path">
+            </a>
+        </span>
+    </li>
+</script>
+
+<form action="/api/upload" method="post" enctype="multipart/form-data">
+    <label for="somefile">File</label>
+    <input name="somefile" type="file" multiple />
+    <input type="submit" value="Submit" />
+</form>*@
+
+@section Scripts
+{
+    <script type="text/javascript" src="~/Scripts/jquery.ui.touch-punch.js"></script>
+    <script src="~/signalr/hubs" type="text/javascript"> </script>
+    <script src="~/Scripts/home-index.js" type="text/javascript"> </script>
+    <script language="javascript">
+        $(function() {
+            var vm = new dashboardViewModel(@Model.Id);
+            $('#message').val("@Model.Id");
+            ko.bindingHandlers.sortable.afterMove = vm.itemDropped;
+            ko.bindingHandlers.sortable.options.dropOnEmpty = true;
+            ko.applyBindings(vm);
+            $.connection.hub.start(function() {
+                vm.init();
+                $(".taskBorder").show();
+            });
+
+            $("#btnAddList").click(function() {
+                var listname = $('#txtColumnName').val();
+                var list = new List(listname, 0, []);
+                $.ajax({
+                    url: '/api/BoardListApi/',
+                    type: "POST",
+                    data: JSON.stringify({ BoardId: vm.boardId, name: listname }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function(data) {
+                        list.id = data.id;
+                        vm.lists.push(list);
+                    }
+                });
+            });
+            $("#btnAddTask").click(function() {
+                var taskname = $('#txtNameTask').val();
+                var taskdesc = $('#textTaskDesc').val();
+                $.ajax({
+                    url: '/api/BoardTask/',
+                    type: "POST",
+                    data: JSON.stringify({ BoardId: vm.boardId, name: taskname, desc: taskdesc }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function(data) {
+                        task = data;
+                        var newTask = new Task(task.Id, task.Name, task.desc);
+                        vm.lists()[0].tasks.splice(0, 0, newTask);
+                        window.location.reload();
+                    }
+                });
+            });
+        });
+    </script>}
