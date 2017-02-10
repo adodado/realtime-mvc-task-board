@@ -4,7 +4,7 @@ A real-time updating lists/tasks board, used mainly in personal hobby projects. 
 
 This is an old project that i have not worked on for about 3 years now. Its a small real-time updated board that i use for personal hobby projects. Its not complete there is some functionality that is missing, certain things that i thought were kind of not required at the moment but i will be adding those now. And also the code is a bit old so i am planing on updating the code and giving the project an update both when it comes to the code part and the graphical part. 
 
-Planed changes:
+# Planed changes:
 
 Localization (currently it is only in Swedish, planing on adding English and German.)
 
